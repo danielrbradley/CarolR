@@ -149,13 +149,19 @@ connect.webaudio = function(filetype, instruments, conf) {
 	});
 };
 
+connect.socketserver = function(filetype, instruments, conf) {
+    if (MIDI.loader) MIDI.loader.message("Web MIDI API...");
+    MIDI.SocketServer.connect(instruments, conf);
+};
+
 /// Helpers
 
 var apis = {
 	"webmidi": true, 
 	"webaudio": true, 
 	"audiotag": true, 
-	"flash": true 
+	"flash": true,
+	"socketserver": true
 };
 
 var getPercent = function(event) {

@@ -506,6 +506,54 @@ if (window.Audio) (function () {
 })();
 
 /*
+	--------------------------------------------
+	socket-server
+	--------------------------------------------
+	--------------------------------------------
+*/
+
+(function () {
+
+    var root = MIDI.SocketServer = {
+        api: "socket-server"
+    };
+
+    root.programChange = function (channel, program) {
+        MIDI.Socket.emit('programChange', { channel: channel, program: program });
+    };
+
+    root.setVolume = function (channel, note) {
+        MIDI.Socket.emit('setVolume', { channel: channel, note: note });
+    };
+
+    root.noteOn = function (channel, note, velocity, delay) {
+        MIDI.Socket.emit('noteOn', { channel: channel, note: note, velocity: velocity, delay: delay });
+    };
+
+    root.noteOff = function (channel, note, delay) {
+        MIDI.Socket.emit('noteOff', { channel: channel, note: note, delay: delay });
+    };
+
+    root.chordOn = function (channel, chord, velocity, delay) {
+        MIDI.Socket.emit('chordOn', { channel: channel, chord: chord, velocity: velocity, delay: delay });
+    };
+
+    root.chordOff = function (channel, chord, delay) {
+        MIDI.Socket.emit('chordOff', { channel: channel, chord: chord, delay: delay });
+    };
+
+    root.stopAllNotes = function () {
+        MIDI.Socket.emit('stopAllNotes', { });
+    };
+
+    root.connect = function (instruments, conf) {
+        setPlugin(root);
+        
+        if (conf.callback) conf.callback();
+    };
+})();
+
+/*
 	helper functions
 */
 

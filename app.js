@@ -19,4 +19,8 @@ io.sockets.on('connection', function (socket) {
   socket.on('play note', function(data) {
 	io.sockets.emit('play note', data);
   });
+  socket.on('noteOn', function(data) {
+	io.sockets.emit('noteOn', data);
+	console.log(data);
+  });
 });
