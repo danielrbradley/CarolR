@@ -18,11 +18,15 @@
     <script src="./js/base64binary.js" type="text/javascript"></script>
 </head>
 <body>
-    <button id="piano-melody">Piano Melody</button>
+    <!--<button id="piano-melody">Piano Melody</button>-->
+    <input id="channel-input" type="text" name="name" value="1" />
+    <button id="change-channel">Change channel</button>
 
     <script type="text/javascript">
 
         window.onload = function () {
+
+            var currentChannel = 1;
 
             function playNotes(ops) {
                 for (var i = 0; i < ops.length; i++) {
@@ -37,16 +41,23 @@
             function selectPianoMelody() {
                 MIDI.loadPlugin({
                     soundfontUrl: "./soundfont/",
-                    instrument: "acoustic_grand_piano",
                     callback: function () {
                         // play the note
                         MIDI.setVolume(0, 127);
+                        connectToSocket();
                     }
                 });
             }
 
-            document.getElementById('piano-melody').onclick = function () {
-                selectPianoMelody();
+            //document.getElementById('piano-melody').onclick = function () {
+            //    selectPianoMelody();
+            //};
+
+            document.getElementById('change-channel').onclick = function () {
+                var newChannel = parseInt(document.getElementById('channel-input').value, 10);
+                if (isNumber(newChannel)) {
+                    currentChannel = newChannel;
+                }
             };
 
             function playSingle(note) {
@@ -69,42 +80,63 @@
 
             var socket = io.connect('/');
             socket.on('news', function (data) {
-                console.log(data);
-                socket.emit('my other event', { my: 'data' });
+                if (data.channel === currentChannel) {
+                    console.log(data);
+                    socket.emit('my other event', { my: 'data' });
+                }
             });
-            socket.on('play note', function (data) {
-                console.log(data);
-                var note = decode(data);
-                playSingle(note);
-            });
-            socket.on('programChange', function (data) {
-                console.log('programChange ' + data);
-                MIDI.programChange(data.channel, data.program);
-            });
-            socket.on('setVolume', function (data) {
-                console.log('setVolume ' + data);
-                MIDI.setVolume(data.channel, data.note);
-            });
-            socket.on('noteOn', function (data) {
-                console.log('noteOn ' + data);
-                MIDI.noteOn(data.channel, data.note, data.velocity, data.delay);
-            });
-            socket.on('noteOff', function (data) {
-                console.log('noteOff ' + data);
-                MIDI.noteOff(data.channel, data.note, data.delay);
-            });
-            socket.on('chordOn', function (data) {
-                console.log('chordOn ' + data);
-                MIDI.chordOn(data.channel, data.chord, data.velocity, data.delay);
-            });
-            socket.on('chordOff', function (data) {
-                console.log('chordOff ' + data);
-                MIDI.chordOff(data.channel, data.chord, data.delay);
-            });
-            socket.on('stopAllNotes', function () {
-                console.log('stopAllNotes');
-                MIDI.stopAllNotes();
-            });
+
+            function connectToSocket() {
+                socket.on('play note', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log(data);
+                        var note = decode(data);
+                        playSingle(note);
+                    }
+                });
+                socket.on('programChange', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('programChange ' + data);
+                        MIDI.programChange(data.channel, data.program);
+                    }
+                });
+                socket.on('setVolume', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('setVolume ' + data);
+                        MIDI.setVolume(data.channel, data.note);
+                    }
+                });
+                socket.on('noteOn', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('noteOn ' + data);
+                        MIDI.noteOn(data.channel, data.note, data.velocity, data.delay);
+                    }
+                });
+                socket.on('noteOff', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('noteOff ' + data);
+                        MIDI.noteOff(data.channel, data.note, data.delay);
+                    }
+                });
+                socket.on('chordOn', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('chordOn ' + data);
+                        MIDI.chordOn(data.channel, data.chord, data.velocity, data.delay);
+                    }
+                });
+                socket.on('chordOff', function(data) {
+                    if (data.channel === currentChannel) {
+                        console.log('chordOff ' + data);
+                        MIDI.chordOff(data.channel, data.chord, data.delay);
+                    }
+                });
+                socket.on('stopAllNotes', function() {
+                    if (data.channel === currentChannel) {
+                        console.log('stopAllNotes');
+                        MIDI.stopAllNotes();
+                    }
+                });
+            }
         };
 
     </script>
