@@ -19,8 +19,32 @@ io.sockets.on('connection', function (socket) {
   socket.on('play note', function(data) {
 	io.sockets.emit('play note', data);
   });
-  socket.on('noteOn', function(data) {
+  socket.on('programChange', function (data) {
+      console.log('programChange ' + data);
+	io.sockets.emit('programChange', data);
+  });
+  socket.on('setVolume', function (data) {
+      console.log('setVolume ' + data);
+	io.sockets.emit('setVolume', data);
+  });
+  socket.on('noteOn', function (data) {
+      console.log('noteOn ' + data);
 	io.sockets.emit('noteOn', data);
-	console.log(data);
+  });
+  socket.on('noteOff', function (data) {
+      console.log('noteOff ' + data);
+	io.sockets.emit('noteOff', data);
+  });
+  socket.on('chordOn', function (data) {
+      console.log('chordOn ' + data);
+	io.sockets.emit('chordOn', data);
+  });
+  socket.on('chordOff', function (data) {
+      console.log('chordOff ' + data);
+	io.sockets.emit('chordOff', data);
+  });
+  socket.on('stopAllNotes', function () {
+      console.log('stopAllNotes ' + data);
+	io.sockets.emit('stopAllNotes', data);
   });
 });

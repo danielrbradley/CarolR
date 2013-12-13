@@ -77,6 +77,34 @@
                 var note = decode(data);
                 playSingle(note);
             });
+            socket.on('programChange', function (data) {
+                console.log('programChange ' + data);
+                MIDI.programChange(data.channel, data.program);
+            });
+            socket.on('setVolume', function (data) {
+                console.log('setVolume ' + data);
+                MIDI.setVolume(data.channel, data.note);
+            });
+            socket.on('noteOn', function (data) {
+                console.log('noteOn ' + data);
+                MIDI.noteOn(data.channel, data.note, data.velocity, data.delay);
+            });
+            socket.on('noteOff', function (data) {
+                console.log('noteOff ' + data);
+                MIDI.noteOff(data.channel, data.note, data.delay);
+            });
+            socket.on('chordOn', function (data) {
+                console.log('chordOn ' + data);
+                MIDI.chordOn(data.channel, data.chord, data.velocity, data.delay);
+            });
+            socket.on('chordOff', function (data) {
+                console.log('chordOff ' + data);
+                MIDI.chordOff(data.channel, data.chord, data.delay);
+            });
+            socket.on('stopAllNotes', function () {
+                console.log('stopAllNotes');
+                MIDI.stopAllNotes();
+            });
         };
 
     </script>
