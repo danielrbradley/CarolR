@@ -16,4 +16,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('my other event', function (data) {
     console.log(data);
   });
+  socket.on('play note', function(data) {
+	io.sockets.emit('play note', data);
+  });
 });
