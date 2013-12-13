@@ -88,11 +88,9 @@
 
             function connectToSocket() {
                 socket.on('play note', function(data) {
-                    if (data.channel === currentChannel) {
-                        console.log(data);
-                        var note = decode(data);
-                        playSingle(note);
-                    }
+                    console.log(data);
+                    var note = decode(data);
+                    playSingle(note);
                 });
                 socket.on('programChange', function(data) {
                     if (data.channel === currentChannel) {
